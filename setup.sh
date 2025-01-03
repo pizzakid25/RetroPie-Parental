@@ -122,7 +122,7 @@ install() {
   if [ ! -e "$INSTALLDIR" ]
   then
     echo "${magenta}Downloading RetroPie Parental software...${normal}"
-    git clone https://github.com/zaront/RetroPie-Parental.git
+    git clone https://github.com/pizzakid25/RetroPie-Parental.git
   fi
   cd "$INSTALLDIR"
 
