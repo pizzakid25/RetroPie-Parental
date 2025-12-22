@@ -137,6 +137,8 @@ def update_timer():
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "prod":
+        cli = sys.modules['flask.cli']
+        cli.show_server_banner = lambda *x: None
         log = logging.getLogger('werkzeug')
         log.setLevel(logging.ERROR)
         log.disabled = True
