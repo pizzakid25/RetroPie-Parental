@@ -140,18 +140,15 @@ def start_game(game, emulator):
 
     # show time remaining
     if disabled:
-        print("Time limits are disabled")
-        banner("Unlimited Play")
+        banner("UNLIMITED PLAY")
     elif remaining == 0:
-        print("No time left")
         reason = timer["reason"]
         if reason == "":
-            reason = "GAME OVER"
+            reason = "NO TIME LEFT"
         banner(reason)
     else:
-        print("Remaining time")
         timeLeft = time.strftime("%H:%M:%S", time.gmtime(remaining))
-        banner(timeLeft)
+        banner("TIME LEFT: " + timeLeft)
 
     # await password
     passwords = file.get_passwords()
