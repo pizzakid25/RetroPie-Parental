@@ -162,6 +162,7 @@ def start_game(game, emulator):
     # allow the game to start
     if disabled:
         file.log("Started-Disabled | " + game)
+        start_game_monitor(emulator)
     elif unlimited:
         play_sound("password-success.wav")
         file.log("Started-Unlimited | " + game)
@@ -185,12 +186,14 @@ def start_monitor(emulator):
         time.sleep(60)
         timer = file.get_timer()
         remaining = remaining_time(timer)
-        if 1 <= remaining <= 60:
-            play_sound("game-warning.wav")
-        if remaining == 0:
-            play_sound("game-end.wav")
-            kill_game(emulator)
-            break
+        disabled = timer["disabled"]
+        if not disabled:
+            if 1 <= remaining <= 60:
+                play_sound("game-warning.wav")
+            if remaining == 0:
+                play_sound("game-end.wav")
+                kill_game(emulator)
+                break
 
 # parse cli
 def parse_cli():
