@@ -3,6 +3,7 @@
 import time
 import sys
 import os
+import re
 import argparse
 import psutil
 import multiprocessing
@@ -11,9 +12,12 @@ import datetime
 import sshkeyboard
 import threading
 import file
+import shutil
 from pathlib import Path
 
 ROOT, FILENAME = os.path.split(os.path.abspath(__file__))
+ANSI_ESCAPE = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+
 
 
 def secondsToday():
@@ -100,7 +104,26 @@ def enter_password(password):
     return entered == password
 
 def banner(text):
-    os.system("toilet -f mono12 -t --gay \"" + text + "\" | while IFS= read -r line; do width=$(echo \"$line\" | sed 's/\x1b\[[0-9;]*m//g' | wc -m); pad=$(( ($(tput cols) - width) / 2 )); printf \"%${pad}s%s\n\" \"\" \"$line\"; done")
+    cmd = ["toilet", "-f", "mono12", "-t", "--gay", text]
+    try:
+        raw_output = subprocess.check_output(cmd, text=True)
+        lines_list = raw_output.splitlines()
+    except subprocess.CalledProcessError:
+        return
+
+    columns, terminal_rows = shutil.get_terminal_size()
+    
+    v_pad = max(0, (terminal_rows - len(lines_list)) // 2)
+    
+    print("\033[H\033[J", end="") 
+    print("\n" * v_pad, end="")
+
+    for line in lines_list:
+        visual_width = len(ANSI_ESCAPE.sub('', line))
+        h_pad = max(0, (columns - visual_width) // 2)
+        print(" " * h_pad + line)
+
+    print("\n" * (v_pad - 1), end="")
 
 def clean_name(name):
     name = Path(name).stem.split("(",1)[0].strip()
