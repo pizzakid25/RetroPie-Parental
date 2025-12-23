@@ -100,7 +100,7 @@ def enter_password(password):
     return entered == password
 
 def banner(text):
-    os.system("toilet -f mono12 -t --gay \"" + text + "\"")
+    os.system("toilet -f mono12 -t --gay \"" + text + "\" | while IFS= read -r line; do width=$(echo \"$line\" | sed 's/\x1b\[[0-9;]*m//g' | wc -m); pad=$(( ($(tput cols) - width) / 2 )); printf \"%${pad}s%s\n\" \"\" \"$line\"; done")
 
 def clean_name(name):
     name = Path(name).stem.split("(",1)[0].strip()
