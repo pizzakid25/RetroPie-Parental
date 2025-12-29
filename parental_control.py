@@ -229,6 +229,9 @@ def parse_cli():
     end.add_argument("game", help="name of the game that is starting")
     monitor = sub.add_parser("start_monitor", help="monitors a running game")
     monitor.add_argument("emulator", help="the process name of the emulator that the game will use")
+    display = sub.add_parser("banner", help="displays a banner")
+    display.add_argument("text", help="the text to display")
+
     args = parser.parse_args()
     if args.command == "start_game":
         start_game(args.game, args.emulator)
@@ -236,6 +239,8 @@ def parse_cli():
         end_game(args.game)
     elif args.command == "start_monitor":
         start_monitor(args.emulator)
+    elif args.command == "banner":
+        banner(args.text)
     else:
         parser.print_help(sys.stderr)
         sys.exit(1)
